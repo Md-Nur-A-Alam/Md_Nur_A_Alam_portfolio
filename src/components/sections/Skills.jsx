@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import SectionTag from '../ui/SectionTag';
 import { useData } from '../../context/DataContext';
-import { FiMonitor, FiCode, FiBrain, FiTool } from 'react-icons/fi';
+import { FiMonitor, FiCode, FiCpu, FiTool } from 'react-icons/fi';
 import { fadeInUp } from '../../lib/animations';
 
 const iconMap = {
   FiMonitor: <FiMonitor />,
   FiCode: <FiCode />,
-  FiBrain: <FiBrain />,
+  FiCpu: <FiCpu />,
   FiTool: <FiTool />
 };
 

@@ -1,137 +1,103 @@
 import { useEffect, useRef, useState } from 'react';
 
 export default function CustomCursor() {
-  const dotRef = useRef(null);
+  const dotRef  = useRef(null);
   const ringRef = useRef(null);
-  const [isTouch, setIsTouch] = useState(false);
-  const [cursorState, setCursorState] = useState('default');
-  const requestRef = useRef(null);
-
-  // Mouse coords
-  const mouse = useRef({ x: -100, y: -100 });
-  const ring = useRef({ x: -100, y: -100 });
+  const [state, setState] = useState('default');
+  const pos = useRef({ x: 0, y: 0 });
+  const mouse = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-      setIsTouch(true);
-      return;
-    }
+    // Disable on touch devices
+    if ('ontouchstart' in window) return;
 
-    const onMouseMove = (e) => {
-      mouse.current.x = e.clientX;
-      mouse.current.y = e.clientY;
+    const onMove = (e) => {
+      mouse.current = { x: e.clientX, y: e.clientY };
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+        dotRef.current.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
       }
     };
 
-    const updateRing = () => {
-      const lerp = 0.15;
-      ring.current.x += (mouse.current.x - ring.current.x) * lerp;
-      ring.current.y += (mouse.current.y - ring.current.y) * lerp;
-
+    let raf;
+    const loop = () => {
+      pos.current.x += (mouse.current.x - pos.current.x) * 0.10;
+      pos.current.y += (mouse.current.y - pos.current.y) * 0.10;
       if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0) translate(-50%, -50%)`;
+        ringRef.current.style.transform = `translate(${pos.current.x - 20}px, ${pos.current.y - 20}px)`;
       }
-      requestRef.current = requestAnimationFrame(updateRing);
+      raf = requestAnimationFrame(loop);
+    };
+    loop();
+
+    // State detection via event delegation
+    const onOver = (e) => {
+      const el = e.target.closest('[data-cursor]');
+      if (el) setState(el.dataset.cursor);
+      else if (e.target.closest('a, button')) setState('hover');
+      else if (e.target.closest('p, h1, h2, h3, span')) setState('text');
+      else setState('default');
     };
 
-    const handleMouseOver = (e) => {
-      const target = e.target.closest('[data-cursor]');
-      if (target) {
-        setCursorState(target.getAttribute('data-cursor'));
-      } else if (e.target.closest('a') || e.target.closest('button')) {
-        setCursorState('hover');
-      } else {
-        setCursorState('default');
-      }
+    const onClick = () => {
+      setState('click');
+      setTimeout(() => setState('default'), 150);
     };
 
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseover', handleMouseOver);
-    requestRef.current = requestAnimationFrame(updateRing);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseover', onOver);
+    window.addEventListener('mousedown', onClick);
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseover', handleMouseOver);
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      cancelAnimationFrame(raf);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseover', onOver);
+      window.removeEventListener('mousedown', onClick);
     };
   }, []);
 
-  if (isTouch) return null;
-
-  let dotSize = 8;
-  let ringSize = 40;
-  let ringStyle = {
-    border: '1.5px solid var(--accent)',
-    opacity: 0.7,
-    backgroundColor: 'transparent',
-    borderRadius: '50%',
-    transition: 'width 0.3s, height 0.3s, background-color 0.3s, border-radius 0.3s',
-  };
-  let dotStyle = {
-    backgroundColor: 'var(--accent)',
-    transition: 'width 0.3s, height 0.3s, opacity 0.3s',
+  // State-based styles
+  const ringStyles = {
+    default: { width: 40, height: 40, opacity: 0.7, background: 'transparent' },
+    hover:   { width: 64, height: 64, opacity: 1,   background: 'var(--accent-glow)' },
+    text:    { width: 3,  height: 28, opacity: 0.9, background: 'var(--accent)', borderRadius: 2 },
+    click:   { width: 20, height: 20, opacity: 1,   background: 'var(--accent-glow)' },
+    view:    { width: 72, height: 72, opacity: 1,   background: 'var(--accent-glow)' },
   };
 
-  switch (cursorState) {
-    case 'hover':
-      dotSize = 4;
-      ringSize = 64;
-      ringStyle.backgroundColor = 'var(--accent-glow)';
-      break;
-    case 'text':
-      dotSize = 2;
-      dotStyle.opacity = 0;
-      ringSize = 28;
-      ringStyle = {
-        ...ringStyle,
-        width: '2px',
-        borderRadius: '0',
-        backgroundColor: 'var(--accent)',
-        border: 'none',
-        opacity: 1,
-      };
-      break;
-    case 'view':
-      dotSize = 0;
-      ringSize = 72;
-      ringStyle.backgroundColor = 'var(--accent-glow)';
-      break;
-    case 'drag':
-      dotSize = 0;
-      ringSize = 48;
-      ringStyle.border = '1.5px dashed var(--accent)';
-      ringStyle.opacity = 1;
-      break;
-  }
+  const s = ringStyles[state] || ringStyles.default;
 
   return (
     <>
       <div
-        ref={ringRef}
-        className="pointer-events-none fixed z-[9999] top-0 left-0 flex items-center justify-center overflow-hidden"
+        ref={dotRef}
         style={{
-          width: ringStyle.width || `${ringSize}px`,
-          height: `${ringSize}px`,
-          ...ringStyle,
+          position: 'fixed', zIndex: 9999, pointerEvents: 'none',
+          width: 8, height: 8, borderRadius: '50%',
+          background: 'var(--accent)',
+          transform: 'translate(-100px, -100px)',
+          transition: 'width 0.2s, height 0.2s',
+        }}
+      />
+      <div
+        ref={ringRef}
+        style={{
+          position: 'fixed', zIndex: 9998, pointerEvents: 'none',
+          width: s.width, height: s.height,
+          borderRadius: state === 'text' ? 2 : '50%',
+          border: `1.5px solid var(--accent)`,
+          background: s.background,
+          opacity: s.opacity,
+          transform: 'translate(-100px, -100px)',
+          transition: 'width 0.25s ease, height 0.25s ease, opacity 0.25s ease, background 0.25s ease, border-radius 0.25s ease',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
       >
-        {cursorState === 'view' && (
-          <span className="text-[10px] font-bold text-[var(--accent)] tracking-widest absolute">
+        {state === 'view' && (
+          <span style={{ fontFamily: 'Bebas Neue', fontSize: 11, color: 'var(--accent)', letterSpacing: '0.1em' }}>
             VIEW
           </span>
         )}
       </div>
-      <div
-        ref={dotRef}
-        className="pointer-events-none fixed z-[10000] top-0 left-0 rounded-full"
-        style={{
-          width: `${dotSize}px`,
-          height: `${dotSize}px`,
-          ...dotStyle,
-        }}
-      />
     </>
   );
 }

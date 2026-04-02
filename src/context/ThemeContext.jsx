@@ -1,26 +1,28 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
+const THEMES = ['dark-luxe', 'light-pearl', 'dev-saturated'];
 const ThemeContext = createContext();
 
-export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('nur_theme') || 'dark-luxe';
-  });
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState(() =>
+    localStorage.getItem('nur_theme') || 'dark-luxe'
+  );
 
   useEffect(() => {
-    localStorage.setItem('nur_theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('nur_theme', theme);
   }, [theme]);
 
-  const changeTheme = (newTheme) => {
-    setTheme(newTheme);
+  const cycleTheme = () => {
+    const next = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
+    setTheme(next);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, changeTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, cycleTheme, THEMES }}>
       {children}
     </ThemeContext.Provider>
   );
-};
+}
 
 export const useTheme = () => useContext(ThemeContext);
