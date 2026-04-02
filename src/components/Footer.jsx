@@ -33,7 +33,7 @@ export default function Footer() {
         >
           {/* Left */}
           <div>
-            <div className="font-['Cormorant_Garamond'] italic text-[28px] text-[var(--accent)] mb-2">N·A</div>
+            <div className="font-['Cormorant_Garamond'] italic text-[28px] text-[var(--accent)] mb-2">Nur_A.</div>
             <p className="font-['DM_Mono'] text-[12px] text-[var(--text-muted)] leading-relaxed max-w-[200px]">
               Building the future, one component at a time.
             </p>

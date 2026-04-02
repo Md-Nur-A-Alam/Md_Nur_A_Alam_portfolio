@@ -123,7 +123,7 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
-              <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -146,9 +146,8 @@ export default function Navbar() {
                   <button
                     key={link}
                     onClick={() => scrollToSection(link)}
-                    className={`text-left font-['Cormorant_Garamond'] text-[34px] leading-none transition-colors ${
-                      activeSection === link ? 'text-[var(--accent)] font-semibold' : 'text-[var(--text-base)] hover:text-[var(--accent)]'
-                    }`}
+                    className={`text-left font-['Cormorant_Garamond'] text-[34px] leading-none transition-colors ${activeSection === link ? 'text-[var(--accent)] font-semibold' : 'text-[var(--text-base)] hover:text-[var(--accent)]'
+                      }`}
                   >
                     {link}
                   </button>

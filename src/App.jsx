@@ -11,6 +11,12 @@ import AdminLogin from './admin/AdminLogin';
 import AdminLayout from './admin/AdminLayout';
 import ProtectedRoute from './admin/ProtectedRoute';
 
+import AdminDashboard from './admin/AdminDashboard';
+import ManageProjects from './admin/sections/ManageProjects';
+import ManageSkills from './admin/sections/ManageSkills';
+import ManageSettings from './admin/sections/ManageSettings';
+import ManageMessages from './admin/sections/ManageMessages';
+
 export default function App() {
   return (
     <HelmetProvider>
@@ -35,13 +41,22 @@ export default function App() {
               <Route path="/" element={<><Navbar /><Home /></>} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route
-                path="/admin/*"
+                path="/admin"
                 element={
                   <ProtectedRoute>
                     <AdminLayout />
                   </ProtectedRoute>
                 }
-              />
+              >
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="projects" element={<ManageProjects />} />
+                <Route path="experience" element={<AdminDashboard />} />
+                <Route path="skills" element={<ManageSkills />} />
+                <Route path="publications" element={<AdminDashboard />} />
+                <Route path="settings" element={<ManageSettings />} />
+                <Route path="messages" element={<ManageMessages />} />
+              </Route>
             </Routes>
           </BrowserRouter>
         </DataProvider>

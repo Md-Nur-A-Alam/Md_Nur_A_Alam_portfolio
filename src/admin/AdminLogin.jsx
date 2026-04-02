@@ -68,7 +68,7 @@ export default function AdminLogin() {
         {/* Monogram */}
         <div className="text-center mb-8">
           <div className="font-['Cormorant_Garamond'] italic font-semibold text-[64px] leading-none text-[var(--accent)] mb-1 select-none">
-            N·A
+            Nur_A.
           </div>
           <div className="font-['DM_Mono'] text-[11px] tracking-[0.3em] text-[var(--text-muted)] uppercase flex items-center justify-center gap-2">
             <FiLock className="text-xs" /> Admin Access

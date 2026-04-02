@@ -50,7 +50,7 @@ export default function AdminLayout() {
         <div className="flex items-center justify-between px-4 py-5 border-b border-[var(--border)]">
           {!collapsed && (
             <div>
-              <div className="font-['Cormorant_Garamond'] italic text-[22px] text-[var(--accent)]">N·A</div>
+              <div className="font-['Cormorant_Garamond'] italic text-[22px] text-[var(--accent)]">Nur_A.</div>
               <div className="font-['DM_Mono'] text-[9px] text-[var(--text-muted)] tracking-widest uppercase">Admin Panel</div>
             </div>
           )}
