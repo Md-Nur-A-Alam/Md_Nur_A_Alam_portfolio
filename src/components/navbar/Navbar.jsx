@@ -123,44 +123,43 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
-            <motion.div 
+              <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
             />
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-[80%] max-w-sm z-50 bg-[var(--glass)] backdrop-blur-2xl border-l border-[var(--border-bright)] shadow-2xl flex flex-col px-8 py-24"
+              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+              className="fixed top-0 right-0 h-[100dvh] w-[85vw] max-w-[340px] z-50 bg-[var(--bg-base)]/80 backdrop-blur-2xl border-l border-[var(--border-bright)] shadow-2xl shadow-black/50 flex flex-col p-8 pt-24"
             >
-              <div className="absolute top-6 left-8">
+              <div className="absolute top-6 left-6">
                 <ThemeSwitcher />
               </div>
 
-              <div className="flex flex-col gap-6 mt-8 flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
-                {NAV_LINKS.map((link, i) => (
+              <div className="flex flex-col gap-7 mt-8 overflow-y-auto pb-8" style={{ scrollbarWidth: 'none' }}>
+                {NAV_LINKS.map(link => (
                   <button
                     key={link}
                     onClick={() => scrollToSection(link)}
-                    className={`text-left font-['Cormorant_Garamond'] text-[32px] sm:text-4xl transition-colors ${activeSection === link ? 'text-[var(--accent)] font-semibold' : 'text-[var(--text-base)] hover:text-[var(--accent)]'
-                      }`}
+                    className={`text-left font-['Cormorant_Garamond'] text-[34px] leading-none transition-colors ${
+                      activeSection === link ? 'text-[var(--accent)] font-semibold' : 'text-[var(--text-base)] hover:text-[var(--accent)]'
+                    }`}
                   >
                     {link}
                   </button>
                 ))}
               </div>
 
-              <div
-                className="mt-auto pt-8 border-t border-[var(--border)] flex justify-between px-2"
-              >
-                <a href="https://github.com/Md-Nur-A-Alam" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-2xl transition-transform hover:-translate-y-1"><FiGithub /></a>
-                <a href="https://www.linkedin.com/in/md-nur-a-alam13/" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-2xl transition-transform hover:-translate-y-1"><FiLinkedin /></a>
-                <a href="https://codeforces.com/profile/Nur_Alam.2812" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-2xl transition-transform hover:-translate-y-1"><FaTrophy /></a>
-                <a href="https://scholar.google.com/citations?user=DYu7B_kAAAAJ" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-2xl transition-transform hover:-translate-y-1"><FiBookOpen /></a>
+              <div className="mt-auto pt-6 border-t border-[var(--border)] flex items-center justify-between">
+                <a href="https://github.com/Md-Nur-A-Alam" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-[22px] transition-transform hover:-translate-y-1"><FiGithub /></a>
+                <a href="https://www.linkedin.com/in/md-nur-a-alam13/" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-[22px] transition-transform hover:-translate-y-1"><FiLinkedin /></a>
+                <a href="https://codeforces.com/profile/Nur_Alam.2812" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-[22px] transition-transform hover:-translate-y-1"><FaTrophy /></a>
+                <a href="https://scholar.google.com/citations?user=DYu7B_kAAAAJ" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-[22px] transition-transform hover:-translate-y-1"><FiBookOpen /></a>
               </div>
             </motion.div>
           </>
