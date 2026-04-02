@@ -141,33 +141,27 @@ export default function Navbar() {
                 <ThemeSwitcher />
               </div>
 
-              <div className="flex flex-col gap-6 mt-8 flex-1 overflow-y-auto no-scrollbar">
+              <div className="flex flex-col gap-6 mt-8 flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
                 {NAV_LINKS.map((link, i) => (
-                  <motion.button
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + i * 0.05 }}
+                  <button
                     key={link}
                     onClick={() => scrollToSection(link)}
                     className={`text-left font-['Cormorant_Garamond'] text-[32px] sm:text-4xl transition-colors ${activeSection === link ? 'text-[var(--accent)] font-semibold' : 'text-[var(--text-base)] hover:text-[var(--accent)]'
                       }`}
                   >
                     {link}
-                  </motion.button>
+                  </button>
                 ))}
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ delay: 0.5 }}
+              <div
                 className="mt-auto pt-8 border-t border-[var(--border)] flex justify-between px-2"
               >
                 <a href="https://github.com/Md-Nur-A-Alam" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-2xl transition-transform hover:-translate-y-1"><FiGithub /></a>
                 <a href="https://www.linkedin.com/in/md-nur-a-alam13/" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-2xl transition-transform hover:-translate-y-1"><FiLinkedin /></a>
                 <a href="https://codeforces.com/profile/Nur_Alam.2812" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-2xl transition-transform hover:-translate-y-1"><FaTrophy /></a>
                 <a href="https://scholar.google.com/citations?user=DYu7B_kAAAAJ" target="_blank" rel="noreferrer" className="text-[var(--text-muted)] hover:text-[var(--accent)] text-2xl transition-transform hover:-translate-y-1"><FiBookOpen /></a>
-              </motion.div>
+              </div>
             </motion.div>
           </>
         )}
