@@ -41,12 +41,12 @@ export default function Hero() {
   };
 
   return (
-    <section id="hero" className="relative w-full h-[100svh] flex items-center overflow-hidden">
+    <section id="hero" className="relative w-full min-h-[100svh] flex items-center overflow-hidden py-28 md:py-0">
       <canvas ref={canvasRef} className="absolute inset-0 z-0 hidden md:block opacity-40 pointer-events-none" />
       
       <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-[var(--accent-glow)] rounded-full blur-[120px] pointer-events-none z-0"></div>
 
-      <div className="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-[55%_45%] gap-8 relative z-10 pt-16 md:pt-0">
+      <div className="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-[55%_45%] gap-8 relative z-10 pt-8 md:pt-0">
         
         <motion.div 
           className="flex flex-col justify-center"

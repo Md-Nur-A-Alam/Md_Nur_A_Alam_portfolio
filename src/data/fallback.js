@@ -170,7 +170,7 @@ export const fallbackPublications = [
 
 export const fallbackSettings = {
   profilePhotoUrl: '/profile.jpg',
-  cvUrl: '#',
+  cvUrl: '/resume.pdf',
   openToWork: true,
   availabilityText: 'Open to full-time roles & freelance projects'
 };
