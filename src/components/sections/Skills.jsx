@@ -14,15 +14,30 @@ const iconMap = {
 };
 
 export default function Skills() {
-  const { skills } = useData(); 
+  const { skills } = useData();
   const [activeFilter, setActiveFilter] = useState('All');
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   const categories = ['All', 'Frontend', 'Languages', 'AI/ML', 'Tools'];
 
-  const filteredData = activeFilter === 'All' 
-    ? skills 
-    : skills.filter(cat => cat.category === activeFilter);
+  // Group flat skills array by category
+  const groupedSkills = skills.reduce((acc, skill) => {
+    let cat = acc.find(c => c.category === skill.category);
+    if (!cat) {
+      let icon = 'FiTool';
+      if (skill.category === 'Frontend') icon = 'FiMonitor';
+      if (skill.category === 'Languages') icon = 'FiCode';
+      if (skill.category === 'AI/ML') icon = 'FiCpu';
+      cat = { category: skill.category, icon, skills: [] };
+      acc.push(cat);
+    }
+    cat.skills.push(skill);
+    return acc;
+  }, []);
+
+  const filteredData = activeFilter === 'All'
+    ? groupedSkills
+    : groupedSkills.filter(cat => cat.category === activeFilter);
 
   const row1 = ['React', 'TypeScript', 'Python', 'Deep Learning', 'Firebase', 'MySQL', 'Tailwind', 'Git', 'Expo'];
   const row2 = ['Framer Motion', 'NLP', 'CNN', 'ICPC', 'RAG', 'FastAPI', 'Zustand', 'React Query', 'C++'];
@@ -34,15 +49,15 @@ export default function Skills() {
   return (
     <section id="skills" className="py-24 max-w-7xl mx-auto px-6 overflow-hidden">
       <SectionTag text="02 — SKILLS" />
-      
-      <motion.h2 
+
+      <motion.h2
         variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
         className="font-['Cormorant_Garamond'] font-semibold text-[clamp(36px,5vw,56px)] mb-12 text-[var(--text-base)]"
       >
         The Architect's Toolkit
       </motion.h2>
 
-      <motion.div 
+      <motion.div
         variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
         className="flex flex-wrap gap-2 mb-12"
       >
@@ -50,11 +65,10 @@ export default function Skills() {
           <button
             key={cat}
             onClick={() => setActiveFilter(cat)}
-            className={`font-['DM_Mono'] text-[12px] px-5 py-2.5 rounded transition-all duration-300 ${
-              activeFilter === cat 
-              ? 'bg-[var(--accent)] text-[var(--bg-base)] font-bold shadow-[0_0_15px_var(--accent-glow)]' 
-              : 'bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-bright)] hover:text-[var(--accent)]'
-            }`}
+            className={`font-['DM_Mono'] text-[12px] px-5 py-2.5 rounded transition-all duration-300 ${activeFilter === cat
+                ? 'bg-[var(--accent)] text-[var(--bg-base)] font-bold shadow-[0_0_15px_var(--accent-glow)]'
+                : 'bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-bright)] hover:text-[var(--accent)]'
+              }`}
             data-cursor="hover"
           >
             {cat}
@@ -89,7 +103,7 @@ export default function Skills() {
                       <span className="font-['DM_Mono'] text-[11px] font-semibold text-[var(--accent)]">{skill.proficiency}%</span>
                     </div>
                     <div className="h-[3px] bg-[var(--bg-secondary)] w-full rounded-full overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         initial={{ width: 0 }}
                         animate={inView ? { width: `${skill.proficiency}%` } : { width: 0 }}
                         transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
@@ -106,23 +120,23 @@ export default function Skills() {
         </AnimatePresence>
       </div>
 
-      <motion.div 
+      <motion.div
         variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
         className="w-full relative overflow-hidden max-w-full"
         style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}
       >
         <div className="flex w-max animate-[marquee_20s_linear_infinite] mb-5 gap-5 pr-5">
           {items1.map((tech, i) => (
-             <span key={`r1-${i}`} className="font-['DM_Mono'] text-[12px] border border-[var(--border)] bg-[var(--bg-elevated)] px-5 py-2.5 rounded-md whitespace-nowrap text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-colors cursor-default">
-               {tech}
-             </span>
+            <span key={`r1-${i}`} className="font-['DM_Mono'] text-[12px] border border-[var(--border)] bg-[var(--bg-elevated)] px-5 py-2.5 rounded-md whitespace-nowrap text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-colors cursor-default">
+              {tech}
+            </span>
           ))}
         </div>
         <div className="flex w-max animate-[marqueeReverse_20s_linear_infinite] gap-5 pr-5">
           {items2.map((tech, i) => (
-             <span key={`r2-${i}`} className="font-['DM_Mono'] text-[12px] border border-[var(--border)] bg-[var(--bg-elevated)] px-5 py-2.5 rounded-md whitespace-nowrap text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-colors cursor-default">
-               {tech}
-             </span>
+            <span key={`r2-${i}`} className="font-['DM_Mono'] text-[12px] border border-[var(--border)] bg-[var(--bg-elevated)] px-5 py-2.5 rounded-md whitespace-nowrap text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-colors cursor-default">
+              {tech}
+            </span>
           ))}
         </div>
       </motion.div>

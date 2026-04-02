@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import CountUp from 'react-countup';
+import CountUpPkg from 'react-countup';
+const CountUp = CountUpPkg.default || CountUpPkg;
 import { useInView } from 'react-intersection-observer';
 import SectionTag from '../ui/SectionTag';
 import { fadeInUp } from '../../lib/animations';

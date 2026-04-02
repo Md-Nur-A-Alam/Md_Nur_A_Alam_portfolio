@@ -12,7 +12,7 @@ const toastStyle = { style: { background: 'var(--bg-elevated)', color: 'var(--te
 
 export default function ManageSettings() {
   const { settings } = useData();
-  const { register, handleSubmit } = useForm({ defaultValues: settings });
+  const { register, handleSubmit } = useForm({ values: settings });
   const [uploading, setUploading] = useState({ photo: false, cv: false });
   const [photoPreview, setPhotoPreview] = useState(settings?.profilePhotoUrl || null);
 

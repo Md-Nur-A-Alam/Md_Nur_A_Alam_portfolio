@@ -3,6 +3,7 @@ import { collection, onSnapshot, query, orderBy, doc, setDoc, increment } from '
 import { db } from '../lib/firebase';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { useData } from '../context/DataContext';
+import toast from 'react-hot-toast';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload?.length) {
@@ -55,6 +56,31 @@ export default function AdminDashboard() {
 
   const last30 = analytics.slice(-30);
 
+  const seedDatabase = async () => {
+    if (!window.confirm("This will load the default demo data into your live Firebase Database. Proceed?")) return;
+    try {
+      const toastId = toast.loading("Seeding data. Please do not close the window...");
+      const { fallbackProjects, fallbackExperience, fallbackSkills, fallbackPublications, fallbackSettings } = await import('../data/fallback');
+      
+      const seedCol = async (colName, array) => {
+        for (const item of array) {
+          const itemRef = doc(db, colName, String(item.id));
+          await setDoc(itemRef, { ...item });
+        }
+      };
+
+      await seedCol('projects', fallbackProjects);
+      await seedCol('experience', fallbackExperience);
+      await seedCol('skills', fallbackSkills);
+      await seedCol('publications', fallbackPublications);
+      await setDoc(doc(db, 'settings', 'site'), fallbackSettings);
+      
+      toast.success("Database seeded dynamically! All fallbacks transferred to Live.", { id: toastId });
+    } catch (err) {
+      toast.error("Failed to seed: " + err.message);
+    }
+  };
+
   const statCards = [
     { label: 'Total Projects', value: projects.length, color: 'var(--accent)' },
     { label: 'Publications', value: publications.length, color: 'var(--accent)' },
@@ -68,9 +94,19 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-['Cormorant_Garamond'] font-semibold text-[36px] text-[var(--text-base)] mb-1">Dashboard</h1>
-        <p className="font-['DM_Mono'] text-[12px] text-[var(--text-muted)]">Analytics & site overview</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-['Cormorant_Garamond'] font-semibold text-[36px] text-[var(--text-base)] mb-1">Dashboard</h1>
+          <p className="font-['DM_Mono'] text-[12px] text-[var(--text-muted)]">Analytics & site overview</p>
+        </div>
+        {projects.length === 0 && (
+          <button 
+            onClick={seedDatabase} 
+            className="border border-[var(--border-bright)] text-[var(--accent)] font-['DM_Mono'] text-[12px] px-5 py-2.5 rounded hover:bg-[var(--accent)] hover:text-[var(--bg-base)] transition-all"
+          >
+            Import Fallback Data to Firebase
+          </button>
+        )}
       </div>
 
       {/* Stat cards */}
